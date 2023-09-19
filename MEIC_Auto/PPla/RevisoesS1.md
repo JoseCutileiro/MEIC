@@ -85,7 +85,7 @@ Selection, Projection, join
 Passar para grafo 
 
 Fizemos varios exercicios de CSP 
-Os objtivos eram modelar, decidir quais eram as variaveis
+Os objetivos eram modelar, decidir quais eram as variaveis
 o dominio e as restrições
 ```
 
