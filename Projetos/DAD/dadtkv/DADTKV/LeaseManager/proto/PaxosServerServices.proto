@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+service PaxosConsensusServices {
+	rpc Prepare(PrepareRequest) returns (PrepareReply);
+	rpc Accept(AcceptRequest) returns (AcceptReply);
+	rpc Commit(CommitRequest) returns (CommitReply);
+}
+
+message Request {
+	string tm = 1;
+	repeated string leases = 2;
+}
+
+message PrepareRequest {
+	string host = 1;
+	int32 proposed_round = 2;
+}
+
+message PrepareReply{
+	bool promise = 1;
+	int32 accepted_round = 2;
+	repeated Request values = 3;
+}
+
+message AcceptRequest {
+	string host = 1;
+	int32 proposed_round = 2;
+	repeated Request values = 3;
+}
+
+message AcceptReply {
+	bool accepted = 1;
+}
+
+message CommitRequest {
+	string host = 1;
+	int32 epoch = 2;
+}
+
+message CommitReply {
+}
+
+
+

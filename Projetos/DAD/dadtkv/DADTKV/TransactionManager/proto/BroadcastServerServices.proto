@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+service BroadcastServices {
+	rpc Broadcast(BroadcastMessage) returns (BroadcastAck);
+	rpc ReceivePermission(PermissionRequest) returns (PermissionReply);
+	rpc LeaseUpdate(LeaseUpdateRequest) returns (LeaseUpdateReply);
+	rpc StatusTM(StatusTMRequest) returns (StatusTMReply);
+}
+
+message StatusTMRequest {
+}
+
+message StatusTMReply {
+}
+
+
+message BroadcastMessage {
+	string name = 1;
+	string host = 2;
+	int32 id = 3;
+	repeated string keys = 4;
+	repeated int32 values = 5;
+	repeated string reads = 6;
+	repeated int32 lenghts = 7;
+}
+
+message BroadcastAck{
+	bool value = 1;
+}
+message PermissionRequest {
+	string host = 1;
+}
+
+message PermissionReply {
+	bool value = 1;
+}
+
+message LeaseUpdateRequest {
+	string host = 1;
+	repeated string leases = 2;
+	repeated int32 lenghts = 3;
+}
+
+message Queue {
+	string lease = 1;
+	repeated string tms = 2;
+}
+
+message LeaseUpdateReply {
+	repeated Queue update = 1;
+	bool ack = 2;
+}
