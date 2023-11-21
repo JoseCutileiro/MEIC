@@ -1,0 +1,277 @@
+<html><head><style>html { font-size: 100%; overflow-y: scroll; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+
+body{
+color:#444;
+font-family:Georgia, Palatino, 'Palatino Linotype', Times, 'Times New Roman', serif;
+font-size:12px;
+line-height:1.5em;
+padding:1em;
+margin:auto;
+max-width:42em;
+background:#fefefe;
+}
+
+a{ color: #0645ad; text-decoration:none;}
+a:visited{ color: #0b0080; }
+a:hover{ color: #06e; }
+a:active{ color:#faa700; }
+a:focus{ outline: thin dotted; }
+a:hover, a:active{ outline: 0; }
+
+::-moz-selection{background:rgba(255,255,0,0.3);color:#000}
+::selection{background:rgba(255,255,0,0.3);color:#000}
+
+a::-moz-selection{background:rgba(255,255,0,0.3);color:#0645ad}
+a::selection{background:rgba(255,255,0,0.3);color:#0645ad}
+
+p{
+margin:1em 0;
+}
+
+img{
+max-width:100%;
+}
+
+h1,h2,h3,h4,h5,h6{
+font-weight:normal;
+color:#111;
+line-height:1em;
+}
+h4,h5,h6{ font-weight: bold; }
+h1{ font-size:2.5em; }
+h2{ font-size:2em; }
+h3{ font-size:1.5em; }
+h4{ font-size:1.2em; }
+h5{ font-size:1em; }
+h6{ font-size:0.9em; }
+
+blockquote{
+color:#666666;
+margin:0;
+padding-left: 3em;
+border-left: 0.5em #EEE solid;
+}
+hr { display: block; height: 2px; border: 0; border-top: 1px solid #aaa;border-bottom: 1px solid #eee; margin: 1em 0; padding: 0; }
+pre, code, kbd, samp { color: #000; font-family: monospace, monospace; _font-family: 'courier new', monospace; font-size: 0.98em; }
+pre { white-space: pre; white-space: pre-wrap; word-wrap: break-word; }
+
+b, strong { font-weight: bold; }
+
+dfn { font-style: italic; }
+
+ins { background: #ff9; color: #000; text-decoration: none; }
+
+mark { background: #ff0; color: #000; font-style: italic; font-weight: bold; }
+
+sub, sup { font-size: 75%; line-height: 0; position: relative; vertical-align: baseline; }
+sup { top: -0.5em; }
+sub { bottom: -0.25em; }
+
+ul, ol { margin: 1em 0; padding: 0 0 0 2em; }
+li p:last-child { margin:0 }
+dd { margin: 0 0 0 2em; }
+
+img { border: 0; -ms-interpolation-mode: bicubic; vertical-align: middle; }
+
+table {
+border-collapse: collapse;
+border-spacing: 0;
+width: 100%;
+}
+th { border-bottom: 1px solid black; }
+td { vertical-align: top; }
+
+@media only screen and (min-width: 480px) {
+body{font-size:14px;}
+}
+
+@media only screen and (min-width: 768px) {
+body{font-size:16px;}
+}
+
+@media print {
+  * { background: transparent !important; color: black !important; filter:none !important; -ms-filter: none !important; }
+  body{font-size:12pt; max-width:100%;}
+  a, a:visited { text-decoration: underline; }
+  hr { height: 1px; border:0; border-bottom:1px solid black; }
+  a[href]:after { content: " (" attr(href) ")"; }
+  abbr[title]:after { content: " (" attr(title) ")"; }
+  .ir a:after, a[href^="javascript:"]:after, a[href^="#"]:after { content: ""; }
+  pre, blockquote { border: 1px solid #999; padding-right: 1em; page-break-inside: avoid; }
+  tr, img { page-break-inside: avoid; }
+  img { max-width: 100% !important; }
+  @page :left { margin: 15mm 20mm 15mm 10mm; }
+  @page :right { margin: 15mm 10mm 15mm 20mm; }
+  p, h2, h3 { orphans: 3; widows: 3; }
+  h2, h3 { page-break-after: avoid; }
+}</style></head><body><h1 id="hyparview-a-membership-protocol-for-reliable-goosip-based-broadcast">HyParView: a membership protocol for reliable goosip-based broadcast</h1>
+<h1 id="relembrar-o-gossip">Relembrar o gossip</h1>
+<ol>
+<li>Acesso rápido aos clientes</li>
+<li>Mesmo em situações de partições</li>
+<li><p>Sacrifica um pouco a coerencia</p>
+</li>
+<li><p>Novas modificações em background (boato/rumor)</p>
+</li>
+<li>Réplicas - Podem ter vistas divergentes</li>
+<li>Valores que o cliente lê são SEMPRE coerentes</li>
+<li>Também permite coerencia forte (mas os slides não abordam)</li>
+<li>Este tipo de protocolos baseia-se na forma como os virus ou os rumures se espalham pela nossa sociedade</li>
+</ol>
+<p>&quot;BACKGROUND UPDATE // PROPAGATION&quot;: Este tipo de algoritmos é aplicado normalmente a ambiente de cloud computing, large scale distributed systems e base de dados descentralizadas, dado que permite uma enorme escalabilidade e rapidez</p>
+<h1 id="protocolos-gossip">Protocolos gossip</h1>
+<p>Este tipo de protocolos são uma estratégia poderosa para implementar sistemas muito escaláveis e resilientes. Cada participante do protocolo mantém uma vista parcial do sistema. A confiança do protocolo depende de algumas propriedades destas vistas</p>
+<ol>
+<li>O degree de distribuição </li>
+<li>Clustering coefficient</li>
+</ol>
+<p>Muitos algoritmos tentam propor &quot;manter vistas parciais para protocolos gossip&quot;. Para relembrar o que significa partial view neste contexto, é apenas uma estratégia usada pelos algoritmos que fazem o controlo da informação que cada nó &quot;sabe&quot; do sistema como um todo.</p>
+<pre><code>Manter o estado do sistema inteiro num <span class="hljs-built_in">n</span>ó pode ser dificil e pode acabar por desperdiçar muitos recursos. Assim muitos algoritmos tentam representar apenas a vista parcial (um subset de <span class="hljs-built_in">n</span>ós). A ideia é os <span class="hljs-built_in">n</span>ós em particular apenas conhecem um <span class="hljs-built_in">n</span>úmero pequeno de <span class="hljs-built_in">n</span>ós (neighbors), mas no geral eles conhecem o sistema completo (comunicando//gossipando)
+</code></pre><p>Mas isto não é só coisas bonitas, existe um caso em  que este tipo de abordagens não funciona bem: Quando existem muitas falhas no sistema. Para combater este problema, o paper apresenta o HyparView. Em que a ideia é ter duas partial views distintas (com objetivos diferentes e mantidas de maneira diferente)</p>
+<h1 id="introdu-o-caso-standard-global-view-">Introdução: Caso standard (global view)</h1>
+<p>Num sistema gossip, quando um nó quer fazer broadcast, seleciona t nós (ao calhas). Nota: O número t é um atributo chamado fanout. Quando m nó recebe a mensagem repete este processo. Podemos ver que existe bastante redundância por aqui, multiplos nós irão receber a mesma mensagem repetidamente, mesmo assim a carga é distribuida pelo sistema de forma praticamente justa e quase sem trabalho nenhum.</p>
+<h1 id="introdu-ao-partial-view">Introduçao: Partial view</h1>
+<p>No sistema acima cada nó conhece o sistema inteiro (ou seja todos conhecem todos). Como podem prever facilmente este sistema não é escalável (temos que manter todas as ligações durante o tempo inteiro). Para &#39;vencer&#39; este problema muitos algoritmos usam a chamada vista parcial (em que em vez de conhecer a rede completa, cada nó sabe apenas um subset do sistema). O processo repete-se, mas em vez de tirarmos t nós do sistema ao calhas, retiramos t nós da nossa vista parcial. Isto depende de um sistema que se chama &#39;membership service&#39;. </p>
+<h1 id="membership-service-">Membership service:</h1>
+<p>Simplificando ao máximo, este serviço permite </p>
+<ol>
+<li>Fazer tracking dos nós</li>
+<li>Encontrar nós</li>
+<li>Que nós é que estão a falhar, e o que fazer neste caso</li>
+<li>Tratam de organizar os quorums</li>
+<li>Tratam da elasticidade e escalabilidade do sistema</li>
+<li>Segurança: Apenas nós autorizados podem juntar à festa</li>
+</ol>
+<p>Alguns sistemas conhecidos de membership service são: </p>
+<ol>
+<li>Apache zookeper</li>
+<li>Amazon elastic load balancing</li>
+</ol>
+<h1 id="continuando-">continuando...</h1>
+<p>MASSSSS...
+Se um nó conhece apenas um número reduzido do sistema, fica mais vulnerável a falhas, em particular, se existirem MUITAS falhas todo o sistema fica mais vulneravel, e vai utilizar muitos dos serviços do &#39;membership service&#39;, este serviço pode ainda demorar muito tempo a restaurar o sistema, afetando a &#39;reliability&#39; das mensagens que foram espalhadas durante a quebra. </p>
+<h1 id="este-paper-hyparview">Este paper: HyParView</h1>
+<ol>
+<li><p>Usar TCP (reliable) para fazer o gossip entre os vários pares. Assim evitamos tratar do sistema em que existem network omissions</p>
+</li>
+<li><p>Cada nó tem uma &#39;small symmetric active view&#39; (tem fanout + 1 nós). Usar TCP permite que o fanout seja um numero pequeno comparando com outras que usam protocolos menos confiantes. O broadcast é feito deterministicamente by flododing the graph defined by the active view. O grafo é gerado pelo (membership sevice).</p>
+</li>
+<li><p>O TCP é usado como failure detector (dado que existem muitas mensagens a fluir, este detetor de falhas é significativamente rápido a agir)</p>
+</li>
+<li><p>Existe para além da active view uma ... podem adivinhar ... Passive view, tem multiplos backup nós, que podem passar para a active view caso haja alguma falha ou coisa do género de um membro que está na active view.</p>
+</li>
+<li><p>O protocolo de membership tem que tratar de manter a passive view, e para além disso tem que ver que membros é que podem ser &#39;promovidos&#39; para a active viewassim que for necessário. Aliás, ambas as vistas parciais são mantidas pelo membership protocol</p>
+</li>
+</ol>
+<h1 id="hybrid-partial-view">Hybrid partial view</h1>
+<p>Vamos mostrar que este approach, não só permite usar fannouts mais pequenos (ou seja menos carga no sistema), mas também oferece mas resiliência na presença de falhas (até na presença de elevados números de falhas). Eles prometem que o protocolo permite recuperações de sistemas com falhas até 90% dos nós em apenas 4 rondas do membership. Isto é muito melhor comparativamente com as ideias anteriores. </p>
+<h1 id="import-ncia-de-saber-lidar-com-um-elevado-n-mero-de-falhas-">Importância de saber lidar com um elevado número de falhas:</h1>
+<p>Existem algumas situações em que é importante conseguir lidar com um elevado número de falhas</p>
+<ol>
+<li>Desastres naturais, virus </li>
+</ol>
+<p>No paper eles dizem que um virus pode mandar até 10 milhoes de nós  num espaço de dias</p>
+<h1 id="related-work">Related work</h1>
+<h2 id="vistas-parciais">Vistas parciais</h2>
+<p>Cada nós tem um conjunto de n nós (n == fannout), representação de nós (ip,port). O protocolo de membership tem responsabilidade de inicializar os nós e de manter a vista parcial de cada nó durante o periodo de execução. A vista parcial pode ir mudando (devido a falhas, bloqueios, mais nós, menos nós ...)</p>
+<ol>
+<li>MANTER VISTA PARCIAL</li>
+</ol>
+<pre><code>Duas estratégias:
+    &gt; Reactive stategy: Só muda <span class="hljs-selector-tag">em</span> caso de evento externo (adicionar ou remover nós)
+
+    &gt; Cyclic stategy: Atualizar <span class="hljs-selector-tag">a</span> vista de x <span class="hljs-selector-tag">em</span> x tempos 
+
+    O reactive stategy depende de um failure detector, se tiveres um detetor bom o reactive é melhor, caso contratio o cyclic é melhor.
+</code></pre><h1 id="propriedades-das-partial-views">Propriedades das partial views</h1>
+<p>Nota: as partial views são grafos COM DIREÇÃO</p>
+<p>De modo a que funcione, as partial views dependem de algumas coisas:</p>
+<ol>
+<li>Conetividade: Permitir que o broadcast seja mesmo um broadcast (não existem nós isolados)</li>
+<li>Degree distribution: Fazer com que seja bem distribuido<blockquote>
+<p>in degree (os que o conhecem) \
+out degree (os que ele conhece)</p>
+</blockquote>
+</li>
+<li>Average path lenght: A média dos caminhos entre todos os nós, cada caminho é medido com o número de nós intermédios necessários para que a comunicação se dê entre os dois nós.</li>
+<li>Clustering coefficient (valor entre 0 e 1), número de egdes entre o neighbor e o maximo de edges entre esses neighbors. O clustering coefficient é a média desses valores</li>
+<li>Accuracy: O numero de nós que não falhou / o numero de neighbors total de esse nó</li>
+</ol>
+<h1 id="membership-and-gossip-protocols">Membership and gossip protocols</h1>
+<ol>
+<li><p>Scamp: é um reactive membership protocol, mantém duas vistas, a PARTIAL e a INVIEW (a inview é os que ele recebe mensagem). O scamp permite que o tamanho da PARTIAL não seja fixo. (normalmente log n). Para atualizar a partial view utilizam um protocolo de subscrição =&gt; corre quando um novo processo se junta ao sistema. De modo a recuperar os nós enviam um «a espécie de ping que eles chamam de heartbeat que é lançado periodicamente para todos os nós na partial view. Se um nó não receber o hearbeat durante x tempos, assumimos que está isolado e fazemos com que se junte novamente.</p>
+</li>
+<li><p>Cyclon: é um cyclic membership prrotocol, que corre o que chamam de shufflle passado um dado intervalo de tempo. </p>
+</li>
+<li><p>NeEM (network friendly epidemic multicast), usa TCP para espalhar a informação, isto evita as perdas devido a congestão. Neste paper dependemm de TCP para mascarar network omissions e para failure detector, portanto o trabalho é complementar ao NeEM</p>
+</li>
+<li><p>CREW flash dissemination: muitos download de ficheiros em simultanio para muita gente. Usa TCP, mantém uma cache de conecçoes abertas (usa random walk), isto diminui o tempo necessário para abrir uma nova ligação -&gt; pode ser usado no HyParView para a passive view.</p>
+</li>
+</ol>
+<h1 id="reliabity-no-gossip-">RELIABITY NO GOSSIP:</h1>
+<pre><code><span class="hljs-number">100%</span> -&gt; significa que <span class="hljs-selector-tag">a</span> mensagem chegou <span class="hljs-selector-tag">a</span> todos os nós ativos (é o mesmo que um boradcast atómico)
+</code></pre><h1 id="motiva-o-">Motivação:</h1>
+<p>Estes gajos começaram a trabalhar nisto por dois motivos</p>
+<ol>
+<li>O fanout de um gossip protocol depende do objetivo, tanto o nivel de resistencia a falhas que se quer, como o nivel de reliability que se quer. O objetivo é escolher boas views, e usar o TCP (deste modo deve ser possivel usar um fanout mais pequeno)</li>
+</ol>
+<h1 id="gr-ficos-i">Gráficos I</h1>
+<pre><code>Para entregar 50 mensagens, numa network <span class="hljs-keyword">de</span> 10k <span class="hljs-keyword">n</span>ó<span class="hljs-built_in">s</span>
+
+Cyclon: Precisa <span class="hljs-keyword">de</span> fanout <span class="hljs-keyword">de</span> 6 para alcançar 99.9%
+
+Scamp: Precisa <span class="hljs-keyword">de</span> fanout <span class="hljs-keyword">de</span> 6 para alcançar 99%
+
+Eles <span class="hljs-keyword">ir</span>ão mostrar <span class="hljs-keyword">que</span> com o aprouach deles consegue <span class="hljs-keyword">m</span> mais reliability com um valor perto <span class="hljs-keyword">de</span> <span class="hljs-built_in">log</span>(<span class="hljs-keyword">n</span>) para o fanout
+</code></pre><h1 id="gr-ficos-ii">Gráficos II</h1>
+<pre><code>Num sistema <span class="hljs-selector-tag">em</span> que <span class="hljs-number">50%</span> dos nós estão falhados, estes protocolos não conseguem ultrapassar os <span class="hljs-number">85%</span> (<span class="hljs-selector-tag">a</span> reliability é completamnete perdida), e isto pode ser inaceitável <span class="hljs-selector-tag">em</span> vários sistemas que usamos hoje me dia
+</code></pre><h1 id="hyparview">HyParView</h1>
+<p>E é aqui que aparece o HyParView</p>
+<h1 id="relembrar-">Relembrar:</h1>
+<p>Manter duas vistas </p>
+<ol>
+<li><p>Active view (fanout + 1): Dado que os links são simetricos e cada nó deve evitar depender de cada mensagem</p>
+</li>
+<li><p>Passive view (maior) Que assegura a conetividade mesmo com BUÉ da falhas (deve ser maior que log(n)) (o overhead desta view é pouco dado que não é para manter as conexoes abertas)</p>
+</li>
+<li><p>A active view serve para a disseminação da mensagem (é simétrica: Ou seja se p está na active view de q então q está na active view de p). Assumimos o TCP como protocol de transporte, permite com que a active view seja pequena. Sempre que queremos fazer broadcast, lançamos para todos menos para o que fez a mensagem, aqui o gossip também é deterministico. Mas o overlay aqui é criado de forma random -&gt; Utiliza um protocolo de membership</p>
+</li>
+</ol>
+<h1 id="protocol-de-membership-usado-">Protocol de membership usado:</h1>
+<p>Usamos uma reactive strategy para manter a active view. Os nodes podem dar join a esta view quando se conectam ao sistema, e removidos quando falham. A cada mensagem, o overlay<em> é testado implicitamente 
+\
+</em>overlay: Topologia da rede (trocando por miudos)
+\
+A passive view não é usada para fazer a disseminação da mensagem, é apenas manter uma lista de nós que podem substituir os nós da active view em caso de falhas, a passive view utiliza uma estratégia CYCLIC (periodicamente -&gt; shuffle in the house). Para além do shuffle normal eles fazem com que a probabilidade de ter nós ativos na passivew view seja grande (isto faz com que todos os nós que falharam sejam removidos da passive view automaticamente passado um dado numero de epocas)</p>
+<h1 id="mecanismos-de-join-join-request-">Mecanismos de join (join request)</h1>
+<ol>
+<li><p>Quando um nó decide juntar ao overlay, tem que conhecer um nó que já pertence ao overlay (contact node). </p>
+</li>
+<li><p>Para isto o novo node (n) tem que estabelecer uma conecção TCP com o seu contact node (c). 
+\
+Basicamente n -----&gt; c (JOIN REQUEST)</p>
+</li>
+</ol>
+<h2 id="o-que-faz-o-contact-node-">O que faz o contact node?</h2>
+<ol>
+<li><p>Adiciona n à sua active view (mesmo que tenha que dar drop de um nó random qualquer, neste  caso vai ter que enviar DISCONNECT apra o nó que quer dropar da active view)</p>
+</li>
+<li><p>Vai depois enviar um FORWARD JOIN com o novo nó (este request é propagado no overlay utilizando random walk<em> + um parametro</em>)</p>
+</li>
+<li><p>Para além disto ainda tens que fazer duas configuration parametres </p>
+<ol>
+<li>ACTIVE RANDOM WALK LENGTH (ARWL): nr de hops o forward join propagou</li>
+<li>PASSIVE RANDOM WALK LENGTH (PRWL): quando é que o novo nó foi inserido na passive view</li>
+</ol>
+</li>
+</ol>
+<p>NOTAS:</p>
+<ol>
+<li><p>Random walk: A ideia é explorar  a topologia da rede de forma estocástica/aleatória</p>
+</li>
+<li><p>Parametro: time to live -&gt; inicialmente começa a ARWL e vai decrementando a cada hop</p>
+</li>
+<li><p>VER O ALGORITMO I no paper para perceber, o texto está um bocado confuso</p>
+</li>
+</ol>
+</body></html>

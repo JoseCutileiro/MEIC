@@ -1,0 +1,3 @@
+How to run the projet?
+
+To run our project you simply need to run Program.cs on ConfigScript/
